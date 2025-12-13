@@ -3,7 +3,8 @@ import { ApiError } from "../services/ApiError.js";
 import { createUser } from "../services/user.service.js";
 import { validationResult } from "express-validator";
 
-const createUserService = async (req, res) => {
+//user register
+const createUserController = async (req, res) => {
   const error = validationResult(req);
   if (!error.isEmpty()) {
     throw new ApiError(400, error.array()[0].msg);
@@ -17,4 +18,27 @@ const createUserService = async (req, res) => {
   }
 };
 
-export { createUserService };
+// user login
+const userLoginController = async (req, res) => {
+  const error = validationResult(req);
+  if (!error.isEmpty()) {
+    throw new ApiError(400, error.array()[0].msg);
+  }
+  try {
+    const { email, password } = req.body;
+    const user = await userModel.findOne({ email }).select("+password");
+    if (!user) {
+      throw new ApiError(400, "Invalid email or password");
+    }
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      throw new ApiError(400, "Invalid email or password");
+    }
+    const token = user.generateAuthToken();
+    res.status(200).json({ user, token });
+  } catch (error) {
+    throw new ApiError(500, error.message);
+  }
+};
+
+export { createUserController, userLoginController };
