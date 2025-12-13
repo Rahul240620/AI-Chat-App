@@ -1,19 +1,20 @@
-import userModel from "../models/user.model";
-``;
-import { ApiError } from "../services/ApiError";
-import { createUser } from "../services/user.service";
+import userModel from "../models/user.model.js";
+import { ApiError } from "../services/ApiError.js";
+import { createUser } from "../services/user.service.js";
 import { validationResult } from "express-validator";
 
 const createUserService = async (req, res) => {
   const error = validationResult(req);
   if (!error.isEmpty()) {
-    throw new ApiError(400, error.array());
+    throw new ApiError(400, error.array()[0].msg);
   }
   try {
     const user = await createUser(req.body.email, req.body.password);
-    const token=user.generateAuthToken();
+    const token = user.generateAuthToken();
     res.status(201).send(user, token);
   } catch (error) {
     throw new ApiError(500, error.message);
   }
-}; 
+};
+
+export { createUserService };

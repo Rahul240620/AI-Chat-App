@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createUserService } from "../services/user.service";
+import { createUserService } from "../controllers/user.controller.js";
 import { body } from "express-validator";
 
 const router = Router();

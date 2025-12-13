@@ -1,5 +1,5 @@
-import userModel from "../models/user.model";
-import { ApiError } from "./ApiError";
+import userModel from "../models/user.model.js";
+import { ApiError } from "./ApiError.js";
 const createUser = async (email, password) => {
   if (!email || !password) {
     throw new ApiError(400, "Email and password are required");
