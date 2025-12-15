@@ -2,8 +2,11 @@ import { Router } from "express";
 import {
   createUserController,
   userLoginController,
+  userProfileController,
 } from "../controllers/user.controller.js ";
 import { body } from "express-validator";
+
+import { authUserMiddleware } from "../middleware/auth.middleware.js";
 
 const router = Router();
 // user-register
@@ -25,5 +28,8 @@ router.post(
     .withMessage("Password with min 4 letters required"),
   userLoginController
 );
+
+// user Profile
+router.get("/profile", authUserMiddleware, userProfileController);
 
 export default router;

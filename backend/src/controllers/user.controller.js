@@ -41,4 +41,10 @@ const userLoginController = async (req, res) => {
   }
 };
 
-export { createUserController, userLoginController };
+// User Profle
+const userProfileController = (req, res) => {
+  console.log(req.user);
+  res.status(200).json({ user: req.user });
+};
+
+export { createUserController, userLoginController, userProfileController };
