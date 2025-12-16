@@ -3,6 +3,7 @@ import {
   createUserController,
   userLoginController,
   userProfileController,
+  userLogoutController,
 } from "../controllers/user.controller.js ";
 import { body } from "express-validator";
 
@@ -19,7 +20,7 @@ router.post(
   createUserController
 );
 
-//user -login
+//user-login
 router.post(
   "/login",
   body("email").isEmail().withMessage("Email must be valid"),
@@ -31,5 +32,8 @@ router.post(
 
 // user Profile
 router.get("/profile", authUserMiddleware, userProfileController);
+
+//user Logout
+router.get("/logout", authUserMiddleware, userLogoutController);
 
 export default router;

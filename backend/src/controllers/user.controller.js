@@ -51,10 +51,18 @@ const userProfileController = async (req, res) => {
 // user logout
 const userLogoutController = async (req, res) => {
   try {
-    
+    const token = req.cookies.token || req.headers.authorization.split(" ")[1];
+    redisClient.set(token, "logout", "EX", 60 * 60 * 24);
+    res.status(200).json({ message: "User logged out successfully" });
   } catch (error) {
-    
+    console.log(error);
+    throw new ApiError(400, error.message);
   }
-}
+};
 
-export { createUserController, userLoginController, userProfileController };
+export {
+  createUserController,
+  userLoginController,
+  userProfileController,
+  userLogoutController,
+};
