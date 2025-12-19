@@ -36,7 +36,8 @@ const userLoginController = async (req, res) => {
       throw new ApiError(400, "Invalid email or password");
     }
     const token = user.generateAuthToken();
-    res.status(200).json({ user, token });
+    console.log({user, token});
+    res.status(201).json({ user, token });
   } catch (error) {
     throw new ApiError(500, error.message);
   }

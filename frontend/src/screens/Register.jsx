@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import UserContext from "../context/UserContext";
 import axios from "../config/axios";
 
-const Login = () => {
+const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { setUser } = UserContext();
@@ -12,12 +12,11 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("/users/login", {
+      .post("/users/register", {
         email,
         password,
       })
       .then((response) => {
-        console.log(response.data);
         localStorage.setItem("token", response.data.token);
         setUser(response.data.user);
         navigate("/");
@@ -34,7 +33,7 @@ const Login = () => {
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-semibold tracking-tight">Welcome</h1>
           <p className="mt-2 text-sm text-slate-400">
-            Sign in to continue to your account
+            Register to create your account
           </p>
         </div>
 
@@ -81,7 +80,7 @@ const Login = () => {
             type="submit"
             className="w-full inline-flex justify-center items-center rounded-lg bg-indigo-500 hover:bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white shadow-lg shadow-indigo-500/30 transition active:scale-[0.98]"
           >
-            Log in
+            Register
           </button>
         </form>
 
@@ -96,12 +95,12 @@ const Login = () => {
 
         {/* Sign up link */}
         <p className="mt-6 text-center text-sm text-slate-400">
-          Don&apos;t have an account?{" "}
+          Already have an account ?
           <Link
-            to="/register"
+            to="/login"
             className="font-medium text-indigo-400 hover:text-indigo-300"
           >
-            Create one
+            &nbsp;Login here
           </Link>
         </p>
       </div>
@@ -109,4 +108,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
