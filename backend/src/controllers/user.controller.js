@@ -13,6 +13,7 @@ const createUserController = async (req, res) => {
   try {
     const user = await createUser(req.body.email, req.body.password);
     const token = user.generateAuthToken();
+    delete user._doc.password;
     res.status(201).send(user, token);
   } catch (error) {
     throw new ApiError(500, error.message);
@@ -36,7 +37,7 @@ const userLoginController = async (req, res) => {
       throw new ApiError(400, "Invalid email or password");
     }
     const token = user.generateAuthToken();
-    console.log({user, token});
+    delete user._doc.password;
     res.status(201).json({ user, token });
   } catch (error) {
     throw new ApiError(500, error.message);
