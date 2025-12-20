@@ -20,4 +20,8 @@ app.get("/", (req, res) => {
 import userRoutes from "./routes/user.routes.js";
 app.use("/users", userRoutes);
 
+// project routes import
+import projectRoutes from "./routes/project.routes.js";
+app.use("/projects", projectRoutes);
+
 export default app;
