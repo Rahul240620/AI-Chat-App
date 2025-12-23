@@ -2,7 +2,10 @@ import projectModel from "../models/project.model.js";
 import userModel from "../models/user.model.js";
 import { ApiError } from "../services/ApiError.js";
 import { validationResult } from "express-validator";
-import { createProjectService } from "../services/project.service.js";
+import {
+  createProjectService,
+  getAllProjectService,
+} from "../services/project.service.js";
 
 // project creation controller
 const createProjectController = async (req, res) => {
@@ -22,4 +25,19 @@ const createProjectController = async (req, res) => {
   }
 };
 
-export { createProjectController };
+// get all projects
+const getAllProjectController = async (req, res) => {
+  try {
+    const loggedInUser = await userModel.findOne({ email: req.user.email });
+    const userId = loggedInUser._id;
+    const allUserProjects = await getAllProjectService({ userId });
+    return res.status(200).json({ 
+      projects: allUserProjects,
+    });
+  } catch (error) {
+    console.log(error);
+    throw new ApiError(500, error.message);
+  }
+};
+
+export { createProjectController, getAllProjectController };
