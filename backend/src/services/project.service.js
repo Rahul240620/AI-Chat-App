@@ -31,5 +31,48 @@ const getAllProjectService = async ({ userId }) => {
   const allUserProjects = await projectModel.find({ users: userId });
   return allUserProjects;
 };
- 
-export { createProjectService, getAllProjectService };
+
+// add user to project service
+const addUserToProjectService = async ({ projectId, users, userId }) => {
+  if (!projectId) {
+    throw new ApiError(400, "Project id is required");
+  }
+  if (!mongoose.Types.ObjectId.isValid(projectId)) {
+    throw new ApiError(400, "Invalid project id");
+  }
+  if (!users) {
+    throw new ApiError(400, "Users are required");
+  }
+  if (
+    !Array.isArray(users) ||
+    users.some((userId) => !mongoose.Types.ObjectId.isValid(userId))
+  ) {
+    throw new ApiError(400, "Users must be an array");
+  }
+  if (!userId) {
+    throw new ApiError(400, "User id is required");
+  }
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    throw new ApiError(400, "Invalid user id");
+  }
+  const project = await projectModel.findOne({
+    _id: projectId,
+    users: userId,
+  });
+  if (!project) {
+    throw new ApiError(400, "user not belong to project");
+  }
+  const updatedProject = await projectModel.findOneAndUpdate(
+    { _id: projectId },
+    {
+      $addToSet: {
+        users: {
+          $each: users,
+        },
+      },
+    },
+    { new: true }
+  );
+  return updatedProject;
+};
+export { createProjectService, getAllProjectService, addUserToProjectService };
