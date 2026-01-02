@@ -3,6 +3,7 @@ import {
   createProjectController,
   getAllProjectController,
   addUserToProjectController,
+  getProjectByIdController 
 } from "../controllers/project.controller.js";
 import { body } from "express-validator";
 import { authUserMiddleware } from "../middleware/auth.middleware.js";
@@ -27,12 +28,14 @@ router.put(
   body("projectId").isString().withMessage("Project id is required"),
   body("users")
     .isArray({ min: 1 })
-    .withMessage("Users must be an array")
-    .custom((users) => {
-      users.every((user) => typeof user === "string");
-    })
+    .withMessage("Users must be an array").bail()
+    .custom((users) => users.every(user => typeof user === "string"))
     .withMessage("Users must be an array of strings"),
   addUserToProjectController
 );
+
+
+// get project by id
+router.get ('/get-project/:projectId', authUserMiddleware, getProjectByIdController)
 
 export default router;

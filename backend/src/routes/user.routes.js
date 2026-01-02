@@ -4,6 +4,7 @@ import {
   userLoginController,
   userProfileController,
   userLogoutController,
+  getAllUserController
 } from "../controllers/user.controller.js ";
 import { body } from "express-validator";
 
@@ -35,5 +36,8 @@ router.get("/profile", authUserMiddleware, userProfileController);
 
 //user Logout
 router.get("/logout", authUserMiddleware, userLogoutController);
+
+// get all users
+ router.get("/all-users", authUserMiddleware, getAllUserController);
 
 export default router;

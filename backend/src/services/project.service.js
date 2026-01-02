@@ -1,6 +1,6 @@
 import projectModel from "../models/project.model.js";
 import { ApiError } from "../services/ApiError.js";
-
+import mongoose from "mongoose";
 // project creation service
 const createProjectService = async (name, userId) => {
   if (!name) {
@@ -75,4 +75,22 @@ const addUserToProjectService = async ({ projectId, users, userId }) => {
   );
   return updatedProject;
 };
-export { createProjectService, getAllProjectService, addUserToProjectService };
+
+// get project by id service
+const getProjectByIdService = async ({ projectId }) => {
+  if (!projectId) {
+    throw new ApiError(400, "Project id is required");
+  }
+  if (!mongoose.Types.ObjectId.isValid(projectId)) {
+    throw new ApiError(400, "Invalid project id");
+  }
+  const project = await projectModel.findOne({ _id: projectId }).populate(
+    "users");
+  if (!project) {
+    throw new ApiError(400, "Project not found");
+  }
+  return project;
+};
+
+
+export { createProjectService, getAllProjectService, addUserToProjectService, getProjectByIdService };

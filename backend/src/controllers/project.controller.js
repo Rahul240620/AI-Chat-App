@@ -6,6 +6,7 @@ import {
   addUserToProjectService,
   createProjectService,
   getAllProjectService,
+  getProjectByIdService,
 } from "../services/project.service.js";
 
 // project creation controller
@@ -60,9 +61,20 @@ const addUserToProjectController = async (req, res) => {
     throw new ApiError(400, error.message);
   }
 };
+// get project by id
+const getProjectByIdController = async (req, res) => {
+  const { projectId } = req.params;
+  try {
+    const project = await getProjectByIdService({ projectId });
+    return res.status(200).json({ project });
+  } catch (error) {
+    throw new ApiError(400, error.message);
+  }
+};
 
 export {
   createProjectController,
   getAllProjectController,
   addUserToProjectController,
+  getProjectByIdController,
 };
