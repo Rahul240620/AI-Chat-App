@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "../config/axios";
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [projectName, setProjectName] = useState("");
+  const [project, setProject] = useState([]);
   function createProject(e) {
     e.preventDefault();
     console.log(projectName);
@@ -18,9 +19,21 @@ const Home = () => {
         console.log(error);
       });
   }
+
+  useEffect(() => {
+    axios
+      .get("/projects/all")
+      .then((res) => {
+        console.log(res.data);
+        setProject(res.data.projects);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
   return (
     <main className="p-4">
-      <div className="projects">
+      <div className="projects flex flex-wrap gap-3">
         <button
           onClick={() => setIsModalOpen(true)}
           className="projects p-4 border border-slate-300 rounded-md"
@@ -29,6 +42,22 @@ const Home = () => {
           <i className="ri-folder-add-fill ml-2 "></i>
         </button>
       </div>
+
+      {project.map((project) => (
+        <div
+          key={project._id}
+          className="projects flex flex-col gap-2 cursor-pointer p-4 border border-slate-300 rounded-md"
+        >
+          <h2 className="font-semibold">{project.name}</h2>
+          <div className=" flex gap-2">
+            <p className="">
+              <small>
+                <i className="ri-user-line">Collabrators:</i>
+              </small>{" "}
+            </p>
+          </div>
+        </div>
+      ))}
 
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
