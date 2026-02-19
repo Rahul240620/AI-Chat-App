@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { ApiError } from "../services/ApiError.js";
 import redisClient from "../services/redis.service.js";
 
-export const authUserMiddleware = async (req, res, next) => {
+ const authUserMiddleware = async (req, res, next) => {
   try {
     const token = req.cookies.token || req.headers.authorization.split(" ")[1];
     if (!token) {
@@ -21,3 +21,4 @@ export const authUserMiddleware = async (req, res, next) => {
     throw new ApiError(401, "Unauthorized user");
   }
 };
+export { authUserMiddleware };

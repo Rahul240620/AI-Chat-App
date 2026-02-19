@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "../config/axios";
+import { useNavigate } from "react-router-dom";
 const Home = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [projectName, setProjectName] = useState("");
   const [project, setProject] = useState([]);
+  const navigate = useNavigate();
   function createProject(e) {
     e.preventDefault();
     console.log(projectName);
@@ -20,17 +22,18 @@ const Home = () => {
       });
   }
 
+  // get all projects in which user is collaborator
   useEffect(() => {
     axios
       .get("/projects/all")
       .then((res) => {
-        console.log(res.data);
         setProject(res.data.projects);
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
+
   return (
     <main className="p-4">
       <div className="projects flex flex-wrap gap-3">
@@ -41,23 +44,24 @@ const Home = () => {
           New Project
           <i className="ri-folder-add-fill ml-2 "></i>
         </button>
-      </div>
 
-      {project.map((project) => (
-        <div
-          key={project._id}
-          className="projects flex flex-col gap-2 cursor-pointer p-4 border border-slate-300 rounded-md"
-        >
-          <h2 className="font-semibold">{project.name}</h2>
-          <div className=" flex gap-2">
-            <p className="">
-              <small>
-                <i className="ri-user-line">Collabrators:</i>
-              </small>{" "}
-            </p>
+        {project.map((project) => (
+          <div
+            key={project._id}
+            className="projects flex flex-col gap-2 cursor-pointer p-4 border border-slate-300 rounded-md hover:bg-blue-200"
+          >
+            <h2 className="font-semibold">{project.name}</h2>
+            <div className=" flex gap- 6">
+              <p>
+                <small>
+                  <i className="ri-user-line"></i>Collabrators :
+                </small>
+                {project.users.length}
+              </p>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
 
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
